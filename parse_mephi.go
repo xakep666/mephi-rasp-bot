@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yhat/scrape"
-	"golang.org/x/net/html"
-	"golang.org/x/net/html/atom"
+	"rasp-bot/Godeps/_workspace/src/github.com/yhat/scrape"
+	"rasp-bot/Godeps/_workspace/src/golang.org/x/net/html"
+	"rasp-bot/Godeps/_workspace/src/golang.org/x/net/html/atom"
 )
 
 /* Структура таблицы:

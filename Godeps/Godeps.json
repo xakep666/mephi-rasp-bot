@@ -1,0 +1,14 @@
+{
+	"ImportPath": "rasp-bot",
+	"GoVersion": "go1.5",
+	"Deps": [
+		{
+			"ImportPath": "github.com/yhat/scrape",
+			"Rev": "47d070048ae58bf228dfdfcfaf1d1c6abc00620e"
+		},
+		{
+			"ImportPath": "golang.org/x/net/html",
+			"Rev": "db8e4de5b2d6653f66aea53094624468caad15d2"
+		}
+	]
+}
