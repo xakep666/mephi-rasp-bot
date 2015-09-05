@@ -1,1 +1,1 @@
-worker: rasp-bot
+worker: rasp-bot &
