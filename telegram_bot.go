@@ -186,7 +186,7 @@ func HandleRequest(chat_id int, text string, tt ITimeTable) (cfg tgbotapi.Messag
 
 func InitializeBotServer(tt ITimeTable) {
 	process_base = make(map[int]phases)
-	bot, err := tgbotapi.NewBotAPI("70396489:AAHxyupsA126ehd81m5eUbGjKatEDj2K-OQ")
+	bot, err := tgbotapi.NewBotAPI(config.Token)
 	if err != nil {
 		log.Panicln("Cannot initializae bot api, " + err.Error())
 	}

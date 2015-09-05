@@ -1,7 +1,8 @@
 package main
 
 import (
-//"fmt"
+	"encoding/json"
+	"os"
 )
 
 type TableRow []string
@@ -20,9 +21,23 @@ type ITimeTable interface {
 	PrDayTimeTable(string, string) []TableRow    //на день недели
 }
 
+type Config struct {
+	Token string `json:"token"`
+}
+
+var config Config
+
 var DayOfWeekString = [...]string{"", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"}
 
 func main() {
 	var tt MEPHI_TimeTable
+	file, err := os.Open("config.json")
+	if err != nil {
+		panic(err)
+	}
+	err = json.NewDecoder(file).Decode(&config)
+	if err != nil {
+		panic(err)
+	}
 	InitializeBotServer(&tt)
 }
