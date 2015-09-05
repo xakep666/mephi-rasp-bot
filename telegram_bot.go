@@ -161,16 +161,17 @@ func HandleRequest(chat_id int, text string, tt ITimeTable) (cfg tgbotapi.Messag
 		}
 	default:
 		{
-			cfg.Text = "Выберите вариант"
 			record := process_base[chat_id]
 			switch record.groupPrep {
 			case GROUP:
 				{
+					cfg.Text = "Выберите вариант"
 					record.name = text
 					cfg.ReplyMarkup = KbdLayout(true)
 				}
 			case PREP:
 				{
+					cfg.Text = "Выберите вариант"
 					record.name = text
 					cfg.ReplyMarkup = KbdLayout(false)
 				}
