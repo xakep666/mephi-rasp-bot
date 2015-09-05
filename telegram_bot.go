@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/Syfaro/telegram-bot-api"
 	"log"
+	"rasp-bot/Godeps/_workspace/src/github.com/Syfaro/telegram-bot-api"
 )
 
 //Разметка клавиатуры выбора дней

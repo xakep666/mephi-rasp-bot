@@ -1,1 +1,1 @@
-web: rasp-bot
+worker: rasp-bot
