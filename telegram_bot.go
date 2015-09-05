@@ -56,7 +56,6 @@ var process_base map[int]phases //по id чата
 
 //склейка массива строк в одну для отправки
 func StringJoiner(rows []TableRow) (newstr string) {
-	newstr += "РАСПИСАНИЕ\n"
 	for _, row := range rows {
 		for _, cell := range row {
 			newstr += cell
@@ -64,6 +63,7 @@ func StringJoiner(rows []TableRow) (newstr string) {
 		}
 		newstr += "\n"
 	}
+	newstr = "РАСПИСАНИЕ\n" + newstr //telegram не отправляет пустые сообщения (без букв)
 	return
 }
 
