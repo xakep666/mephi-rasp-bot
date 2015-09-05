@@ -10,8 +10,8 @@ import (
 var group_kbd_layout = [][]string{
 	[]string{"Ближайшая"},
 	[]string{"Сегодня", "Пн", "Вт", "Ср"},
-	[]string{"Чт", "Пт", "Сб", "Неделя"},
-	[]string{"Полное", "Зачет", "Экзамен"},
+	[]string{"Чт", "Пт", "Сб", "Вс"},
+	[]string{"Неделя", "Полное", "Зачет", "Экзамен"},
 }
 
 var prep_kbd_layout = [][]string{
@@ -56,6 +56,7 @@ var process_base map[int]phases //по id чата
 
 //склейка массива строк в одну для отправки
 func StringJoiner(rows []TableRow) (newstr string) {
+	newstr += "РАСПИСАНИЕ\n"
 	for _, row := range rows {
 		for _, cell := range row {
 			newstr += cell
