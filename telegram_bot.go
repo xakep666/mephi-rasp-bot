@@ -67,6 +67,7 @@ func StringJoiner(rows []TableRow) (newstr string) {
 
 func HandleRequest(chat_id int, text string, tt ITimeTable) (cfg tgbotapi.MessageConfig) {
 	log.Printf("Processing command %s to chat %d", text, chat_id)
+	cfg.ReplyMarkup = tgbotapi.ReplyKeyboardHide{true, true} //если по ошибке осталась кастомная клавиатура
 	switch text {
 	//комманды
 	case "/start", "/help":
