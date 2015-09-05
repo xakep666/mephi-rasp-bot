@@ -89,13 +89,13 @@ func (tt *MEPHI_TimeTable) GroupWeekTimeTable(gname string) (trs []TableRow) {
 	if err != nil {
 		return
 	}
-	_, week := time.Now().ISOWeek()
 	for _, row := range scrape.FindAll(tt.root, scrape.ByTag(atom.Tr)) {
 		rowToAdd := make(TableRow, 1)
 		//проверка на четность
 		cells := scrape.FindAll(row, scrape.ByTag(atom.Td))
 		//ячеек может быть меньше 3х
 		if len(cells) >= 3 {
+			_, week := time.Now().ISOWeek()
 			oddeven := scrape.Text(cells[2])
 			if oddeven == "/Ч" && (week+1)%2 != 0 {
 				continue
@@ -142,13 +142,13 @@ func (tt *MEPHI_TimeTable) PrWeekTimeTable(pname string) (trs []TableRow) {
 	if err != nil {
 		return
 	}
-	_, week := time.Now().ISOWeek()
 	for _, row := range scrape.FindAll(tt.root, scrape.ByTag(atom.Tr)) {
 		rowToAdd := make(TableRow, 1)
 		//проверка на четность
 		cells := scrape.FindAll(row, scrape.ByTag(atom.Td))
 		//ячеек может быть меньше 3х
 		if len(cells) >= 3 {
+			_, week := time.Now().ISOWeek()
 			oddeven := scrape.Text(cells[2])
 			if oddeven == "/Ч" && (week+1)%2 != 0 {
 				continue
@@ -264,6 +264,7 @@ func (tt *MEPHI_TimeTable) GroupNearestPair(gname string) (trs []TableRow) {
 
 func (tt *MEPHI_TimeTable) GroupDayTimeTable(gname string, dow string) (trs []TableRow) {
 	var tr TableRow
+	countOddEven := false
 	err := tt.rootGetter("gr", gname, "gr")
 	if err != nil {
 		return
@@ -275,9 +276,24 @@ func (tt *MEPHI_TimeTable) GroupDayTimeTable(gname string, dow string) (trs []Ta
 		}
 		if dow == "Сегодня" {
 			dow = DayOfWeekString[int(time.Now().Weekday())]
+			countOddEven = true
 		}
 		if scrape.Text(cells[0]) == dow {
+			if countOddEven && len(cells) >= 3 {
+				_, week := time.Now().ISOWeek()
+				oddeven := scrape.Text(cells[2])
+				if oddeven == "/Ч" && (week+1)%2 != 0 {
+					continue
+				}
+				if oddeven == "Н/" && (week+1)%2 == 0 {
+					continue
+				}
+			}
 			for _, cell := range cells {
+				txt := scrape.Text(cell)
+				if countOddEven && (txt == "Н/" || txt == "/Ч") {
+					continue
+				}
 				tr = append(tr, scrape.Text(cell))
 			}
 		}
@@ -289,6 +305,7 @@ func (tt *MEPHI_TimeTable) GroupDayTimeTable(gname string, dow string) (trs []Ta
 
 func (tt *MEPHI_TimeTable) PrDayTimeTable(pname string, dow string) (trs []TableRow) {
 	var tr TableRow
+	countOddEven := false
 	err := tt.rootGetter("prep", pname, "prep")
 	if err != nil {
 		return
@@ -300,9 +317,24 @@ func (tt *MEPHI_TimeTable) PrDayTimeTable(pname string, dow string) (trs []Table
 		}
 		if dow == "Сегодня" {
 			dow = DayOfWeekString[int(time.Now().Weekday())]
+			countOddEven = true
 		}
 		if scrape.Text(cells[0]) == dow {
+			if countOddEven && len(cells) >= 3 {
+				_, week := time.Now().ISOWeek()
+				oddeven := scrape.Text(cells[2])
+				if oddeven == "/Ч" && (week+1)%2 != 0 {
+					continue
+				}
+				if oddeven == "Н/" && (week+1)%2 == 0 {
+					continue
+				}
+			}
 			for _, cell := range cells {
+				txt := scrape.Text(cell)
+				if countOddEven && (txt == "Н/" || txt == "/Ч") {
+					continue
+				}
 				tr = append(tr, scrape.Text(cell))
 			}
 		}
