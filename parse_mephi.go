@@ -34,8 +34,8 @@ func (tt *MEPHI_TimeTable) rootGetter(tt_selector, name, typ_selector string) (e
 	return
 }
 
-func (tt *MEPHI_TimeTable) GroupTimeTable(gname string) (trs []TableRow, err error) {
-	err = tt.rootGetter("gr", gname, "gr")
+func (tt *MEPHI_TimeTable) GroupTimeTable(gname string) (trs []TableRow) {
+	err := tt.rootGetter("gr", gname, "gr")
 	if err != nil {
 		return
 	}
@@ -51,8 +51,8 @@ func (tt *MEPHI_TimeTable) GroupTimeTable(gname string) (trs []TableRow, err err
 	return
 }
 
-func (tt *MEPHI_TimeTable) GroupRankTimeTable(gname string) (trs []TableRow, err error) {
-	err = tt.rootGetter("gr", gname, "grZ")
+func (tt *MEPHI_TimeTable) GroupRankTimeTable(gname string) (trs []TableRow) {
+	err := tt.rootGetter("gr", gname, "grZ")
 	if err != nil {
 		return
 	}
@@ -68,8 +68,8 @@ func (tt *MEPHI_TimeTable) GroupRankTimeTable(gname string) (trs []TableRow, err
 	return
 }
 
-func (tt *MEPHI_TimeTable) GroupExamTimeTable(gname string) (trs []TableRow, err error) {
-	err = tt.rootGetter("gr", gname, "grE")
+func (tt *MEPHI_TimeTable) GroupExamTimeTable(gname string) (trs []TableRow) {
+	err := tt.rootGetter("gr", gname, "grE")
 	if err != nil {
 		return
 	}
@@ -85,8 +85,8 @@ func (tt *MEPHI_TimeTable) GroupExamTimeTable(gname string) (trs []TableRow, err
 	return
 }
 
-func (tt *MEPHI_TimeTable) GroupWeekTimeTable(gname string) (trs []TableRow, err error) {
-	err = tt.rootGetter("gr", gname, "gr")
+func (tt *MEPHI_TimeTable) GroupWeekTimeTable(gname string) (trs []TableRow) {
+	err := tt.rootGetter("gr", gname, "gr")
 	if err != nil {
 		return
 	}
@@ -121,8 +121,8 @@ func (tt *MEPHI_TimeTable) GroupWeekTimeTable(gname string) (trs []TableRow, err
 	return
 }
 
-func (tt *MEPHI_TimeTable) PrTimeTable(pname string) (trs []TableRow, err error) {
-	err = tt.rootGetter("prep", pname, "prep")
+func (tt *MEPHI_TimeTable) PrTimeTable(pname string) (trs []TableRow) {
+	err := tt.rootGetter("prep", pname, "prep")
 	if err != nil {
 		return
 	}
@@ -138,8 +138,8 @@ func (tt *MEPHI_TimeTable) PrTimeTable(pname string) (trs []TableRow, err error)
 	return
 }
 
-func (tt *MEPHI_TimeTable) PrWeekTimeTable(pname string) (trs []TableRow, err error) {
-	err = tt.rootGetter("prep", pname, "prep")
+func (tt *MEPHI_TimeTable) PrWeekTimeTable(pname string) (trs []TableRow) {
+	err := tt.rootGetter("prep", pname, "prep")
 	if err != nil {
 		return
 	}
@@ -174,8 +174,8 @@ func (tt *MEPHI_TimeTable) PrWeekTimeTable(pname string) (trs []TableRow, err er
 	return
 }
 
-func (tt *MEPHI_TimeTable) PrRankTimeTable(pname string) (trs []TableRow, err error) {
-	err = tt.rootGetter("prep", pname, "prepZ")
+func (tt *MEPHI_TimeTable) PrRankTimeTable(pname string) (trs []TableRow) {
+	err := tt.rootGetter("prep", pname, "prepZ")
 	if err != nil {
 		return
 	}
@@ -191,8 +191,8 @@ func (tt *MEPHI_TimeTable) PrRankTimeTable(pname string) (trs []TableRow, err er
 	return
 }
 
-func (tt *MEPHI_TimeTable) PrepExamTimeTable(pname string) (trs []TableRow, err error) {
-	err = tt.rootGetter("prep", pname, "prepE")
+func (tt *MEPHI_TimeTable) PrExamTimeTable(pname string) (trs []TableRow) {
+	err := tt.rootGetter("prep", pname, "prepE")
 	if err != nil {
 		return
 	}
@@ -208,8 +208,8 @@ func (tt *MEPHI_TimeTable) PrepExamTimeTable(pname string) (trs []TableRow, err 
 	return
 }
 
-func (tt *MEPHI_TimeTable) GroupNearestPair(gname string) (trs []TableRow, err error) {
-	err = tt.rootGetter("gr", gname, "gr")
+func (tt *MEPHI_TimeTable) GroupNearestPair(gname string) (trs []TableRow) {
+	err := tt.rootGetter("gr", gname, "gr")
 	if err != nil {
 		return
 	}
@@ -263,9 +263,9 @@ func (tt *MEPHI_TimeTable) GroupNearestPair(gname string) (trs []TableRow, err e
 	}
 }
 
-func (tt *MEPHI_TimeTable) GroupTodayTimeTable(gname string) (trs []TableRow, err error) {
+func (tt *MEPHI_TimeTable) GroupDayTimeTable(gname string, dow string) (trs []TableRow) {
 	var tr TableRow
-	err = tt.rootGetter("gr", gname, "gr")
+	err := tt.rootGetter("gr", gname, "gr")
 	if err != nil {
 		return
 	}
@@ -274,8 +274,10 @@ func (tt *MEPHI_TimeTable) GroupTodayTimeTable(gname string) (trs []TableRow, er
 		if len(cells) < 3 {
 			continue
 		}
-		dow := int(time.Now().Weekday())
-		if strings.ToLower(scrape.Text(cells[0])) == DayOfWeekString[dow] {
+		if dow == "Сегодня" {
+			dow = DayOfWeekString[int(time.Now().Weekday())]
+		}
+		if scrape.Text(cells[0]) == dow {
 			for _, cell := range cells {
 				tr = append(tr, scrape.Text(cell))
 			}
@@ -286,9 +288,9 @@ func (tt *MEPHI_TimeTable) GroupTodayTimeTable(gname string) (trs []TableRow, er
 	return
 }
 
-func (tt *MEPHI_TimeTable) PrTodayTimeTable(pname string) (trs []TableRow, err error) {
+func (tt *MEPHI_TimeTable) PrDayTimeTable(pname string, dow string) (trs []TableRow) {
 	var tr TableRow
-	err = tt.rootGetter("prep", pname, "prep")
+	err := tt.rootGetter("prep", pname, "prep")
 	if err != nil {
 		return
 	}
@@ -297,8 +299,10 @@ func (tt *MEPHI_TimeTable) PrTodayTimeTable(pname string) (trs []TableRow, err e
 		if len(cells) < 3 {
 			continue
 		}
-		dow := int(time.Now().Weekday())
-		if strings.ToLower(scrape.Text(cells[0])) == DayOfWeekString[dow] {
+		if dow == "Сегодня" {
+			dow = DayOfWeekString[int(time.Now().Weekday())]
+		}
+		if scrape.Text(cells[0]) == dow {
 			for _, cell := range cells {
 				tr = append(tr, scrape.Text(cell))
 			}
