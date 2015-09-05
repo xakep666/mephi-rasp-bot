@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"rasp-bot/Godeps/_workspace/src/github.com/Syfaro/telegram-bot-api"
 )
 
@@ -186,9 +187,9 @@ func HandleRequest(chat_id int, text string, tt ITimeTable) (cfg tgbotapi.Messag
 
 func InitializeBotServer(tt ITimeTable) {
 	process_base = make(map[int]phases)
-	bot, err := tgbotapi.NewBotAPI(config.Token)
+	bot, err := tgbotapi.NewBotAPI(os.Getenv("ACESS_TOKEN"))
 	if err != nil {
-		log.Panicln("Cannot initializae bot api, " + err.Error())
+		log.Panicln("Cannot initialize bot api, " + err.Error())
 	}
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
