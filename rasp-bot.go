@@ -16,12 +16,6 @@ type ITimeTable interface {
 	PrDayTimeTable(string, string) []TableRow    //на день недели
 }
 
-type Config struct {
-	Token string `json:"token"`
-}
-
-var config Config
-
 var DayOfWeekString = [...]string{"", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"}
 
 func main() {
