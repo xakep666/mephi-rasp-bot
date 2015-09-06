@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -23,10 +24,12 @@ func (tt *MEPHI_TimeTable) rootGetter(tt_selector, name, typ_selector string) (e
 	resp, err := http.Get("https://eisgateway.mephi.ru/TimeTable/timetableshow.aspx?" +
 		tt_selector + "=" + name + "&typ=" + typ_selector)
 	if err != nil {
+		log.Printf("Error on getting: %s\n", err.Error())
 		return
 	}
 	root, err := html.Parse(resp.Body)
 	if err != nil {
+		log.Printf("Error on parsing: %s\n", err.Error())
 		return
 	}
 	tt.root = root
@@ -36,6 +39,7 @@ func (tt *MEPHI_TimeTable) rootGetter(tt_selector, name, typ_selector string) (e
 func (tt *MEPHI_TimeTable) GroupTimeTable(gname string) (trs []TableRow) {
 	err := tt.rootGetter("gr", gname, "gr")
 	if err != nil {
+		log.Printf("Error on parsing: %s\n", err.Error())
 		return
 	}
 	i := 0
@@ -53,6 +57,7 @@ func (tt *MEPHI_TimeTable) GroupTimeTable(gname string) (trs []TableRow) {
 func (tt *MEPHI_TimeTable) GroupRankTimeTable(gname string) (trs []TableRow) {
 	err := tt.rootGetter("gr", gname, "grZ")
 	if err != nil {
+		log.Printf("Error on parsing: %s\n", err.Error())
 		return
 	}
 	i := 0
@@ -70,6 +75,7 @@ func (tt *MEPHI_TimeTable) GroupRankTimeTable(gname string) (trs []TableRow) {
 func (tt *MEPHI_TimeTable) GroupExamTimeTable(gname string) (trs []TableRow) {
 	err := tt.rootGetter("gr", gname, "grE")
 	if err != nil {
+		log.Printf("Error on parsing: %s\n", err.Error())
 		return
 	}
 	i := 0
@@ -87,6 +93,7 @@ func (tt *MEPHI_TimeTable) GroupExamTimeTable(gname string) (trs []TableRow) {
 func (tt *MEPHI_TimeTable) GroupWeekTimeTable(gname string) (trs []TableRow) {
 	err := tt.rootGetter("gr", gname, "gr")
 	if err != nil {
+		log.Printf("Error on parsing: %s\n", err.Error())
 		return
 	}
 	for _, row := range scrape.FindAll(tt.root, scrape.ByTag(atom.Tr)) {
@@ -123,6 +130,7 @@ func (tt *MEPHI_TimeTable) GroupWeekTimeTable(gname string) (trs []TableRow) {
 func (tt *MEPHI_TimeTable) PrTimeTable(pname string) (trs []TableRow) {
 	err := tt.rootGetter("prep", pname, "prep")
 	if err != nil {
+		log.Printf("Error on parsing: %s\n", err.Error())
 		return
 	}
 	i := 0
@@ -140,6 +148,7 @@ func (tt *MEPHI_TimeTable) PrTimeTable(pname string) (trs []TableRow) {
 func (tt *MEPHI_TimeTable) PrWeekTimeTable(pname string) (trs []TableRow) {
 	err := tt.rootGetter("prep", pname, "prep")
 	if err != nil {
+		log.Printf("Error on parsing: %s\n", err.Error())
 		return
 	}
 	for _, row := range scrape.FindAll(tt.root, scrape.ByTag(atom.Tr)) {
@@ -176,6 +185,7 @@ func (tt *MEPHI_TimeTable) PrWeekTimeTable(pname string) (trs []TableRow) {
 func (tt *MEPHI_TimeTable) PrRankTimeTable(pname string) (trs []TableRow) {
 	err := tt.rootGetter("prep", pname, "prepZ")
 	if err != nil {
+		log.Printf("Error on parsing: %s\n", err.Error())
 		return
 	}
 	i := 0
@@ -193,6 +203,7 @@ func (tt *MEPHI_TimeTable) PrRankTimeTable(pname string) (trs []TableRow) {
 func (tt *MEPHI_TimeTable) PrExamTimeTable(pname string) (trs []TableRow) {
 	err := tt.rootGetter("prep", pname, "prepE")
 	if err != nil {
+		log.Printf("Error on parsing: %s\n", err.Error())
 		return
 	}
 	i := 0
@@ -210,6 +221,7 @@ func (tt *MEPHI_TimeTable) PrExamTimeTable(pname string) (trs []TableRow) {
 func (tt *MEPHI_TimeTable) GroupNearestPair(gname string) (trs []TableRow) {
 	err := tt.rootGetter("gr", gname, "gr")
 	if err != nil {
+		log.Printf("Error on parsing: %s\n", err.Error())
 		return
 	}
 	trs = make([]TableRow, 1)
@@ -267,6 +279,7 @@ func (tt *MEPHI_TimeTable) GroupDayTimeTable(gname string, dow string) (trs []Ta
 	countOddEven := false
 	err := tt.rootGetter("gr", gname, "gr")
 	if err != nil {
+		log.Printf("Error on parsing: %s\n", err.Error())
 		return
 	}
 	for _, rows := range scrape.FindAll(tt.root, scrape.ByTag(atom.Tr)) {
@@ -308,6 +321,7 @@ func (tt *MEPHI_TimeTable) PrDayTimeTable(pname string, dow string) (trs []Table
 	countOddEven := false
 	err := tt.rootGetter("prep", pname, "prep")
 	if err != nil {
+		log.Printf("Error on parsing: %s\n", err.Error())
 		return
 	}
 	for _, rows := range scrape.FindAll(tt.root, scrape.ByTag(atom.Tr)) {
