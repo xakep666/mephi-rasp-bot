@@ -17,8 +17,17 @@ type ITimeTable interface {
 }
 
 var DayOfWeekString = [...]string{"", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"}
+var DayOfWeekNum map[string]int
 
 func main() {
+	DayOfWeekNum = make(map[string]int)
+	DayOfWeekNum["Пн"] = 1
+	DayOfWeekNum["Вт"] = 2
+	DayOfWeekNum["Ср"] = 3
+	DayOfWeekNum["Чт"] = 4
+	DayOfWeekNum["Пт"] = 5
+	DayOfWeekNum["Сб"] = 6
+	DayOfWeekNum["Вс"] = 7
 	var tt MEPHI_TimeTable
 	InitializeBotServer(&tt)
 }

@@ -102,12 +102,12 @@ func (tt *MEPHI_TimeTable) GroupWeekTimeTable(gname string) (trs []TableRow) {
 		cells := scrape.FindAll(row, scrape.ByTag(atom.Td))
 		//ячеек может быть меньше 3х
 		if len(cells) >= 3 {
-			_, week := time.Now().ISOWeek()
 			oddeven := scrape.Text(cells[2])
-			if oddeven == "/Ч" && (week+1)%2 != 0 {
+			dow := scrape.Text(cells[0])
+			if oddeven == "/Ч" && !tt.isDayOdd(DayOfWeekNum[dow]) {
 				continue
 			}
-			if oddeven == "Н/" && (week+1)%2 == 0 {
+			if oddeven == "Н/" && tt.isDayOdd(DayOfWeekNum[dow]) {
 				continue
 			}
 		}
@@ -157,12 +157,12 @@ func (tt *MEPHI_TimeTable) PrWeekTimeTable(pname string) (trs []TableRow) {
 		cells := scrape.FindAll(row, scrape.ByTag(atom.Td))
 		//ячеек может быть меньше 3х
 		if len(cells) >= 3 {
-			_, week := time.Now().ISOWeek()
+			dow := scrape.Text(cells[0])
 			oddeven := scrape.Text(cells[2])
-			if oddeven == "/Ч" && (week+1)%2 != 0 {
+			if oddeven == "/Ч" && !tt.isDayOdd(DayOfWeekNum[dow]) {
 				continue
 			}
-			if oddeven == "Н/" && (week+1)%2 == 0 {
+			if oddeven == "Н/" && tt.isDayOdd(DayOfWeekNum[dow]) {
 				continue
 			}
 		}
@@ -276,7 +276,6 @@ func (tt *MEPHI_TimeTable) GroupNearestPair(gname string) (trs []TableRow) {
 
 func (tt *MEPHI_TimeTable) GroupDayTimeTable(gname string, dow string) (trs []TableRow) {
 	var tr TableRow
-	countOddEven := false
 	err := tt.rootGetter("gr", gname, "gr")
 	if err != nil {
 		log.Printf("Error on parsing: %s\n", err.Error())
@@ -289,22 +288,20 @@ func (tt *MEPHI_TimeTable) GroupDayTimeTable(gname string, dow string) (trs []Ta
 		}
 		if dow == "Сегодня" {
 			dow = DayOfWeekString[int(time.Now().Weekday())]
-			countOddEven = true
 		}
 		if scrape.Text(cells[0]) == dow {
-			if countOddEven && len(cells) >= 3 {
-				_, week := time.Now().ISOWeek()
+			if len(cells) >= 3 {
 				oddeven := scrape.Text(cells[2])
-				if oddeven == "/Ч" && (week+1)%2 != 0 {
+				if oddeven == "/Ч" && !tt.isDayOdd(DayOfWeekNum[dow]) {
 					continue
 				}
-				if oddeven == "Н/" && (week+1)%2 == 0 {
+				if oddeven == "Н/" && tt.isDayOdd(DayOfWeekNum[dow]) {
 					continue
 				}
 			}
 			for _, cell := range cells {
 				txt := scrape.Text(cell)
-				if countOddEven && (txt == "Н/" || txt == "/Ч") {
+				if txt == "Н/" || txt == "/Ч" {
 					continue
 				}
 				tr = append(tr, scrape.Text(cell))
@@ -318,7 +315,6 @@ func (tt *MEPHI_TimeTable) GroupDayTimeTable(gname string, dow string) (trs []Ta
 
 func (tt *MEPHI_TimeTable) PrDayTimeTable(pname string, dow string) (trs []TableRow) {
 	var tr TableRow
-	countOddEven := false
 	err := tt.rootGetter("prep", pname, "prep")
 	if err != nil {
 		log.Printf("Error on parsing: %s\n", err.Error())
@@ -331,22 +327,20 @@ func (tt *MEPHI_TimeTable) PrDayTimeTable(pname string, dow string) (trs []Table
 		}
 		if dow == "Сегодня" {
 			dow = DayOfWeekString[int(time.Now().Weekday())]
-			countOddEven = true
 		}
 		if scrape.Text(cells[0]) == dow {
-			if countOddEven && len(cells) >= 3 {
-				_, week := time.Now().ISOWeek()
+			if len(cells) >= 3 {
 				oddeven := scrape.Text(cells[2])
-				if oddeven == "/Ч" && (week+1)%2 != 0 {
+				if oddeven == "/Ч" && !tt.isDayOdd(DayOfWeekNum[dow]) {
 					continue
 				}
-				if oddeven == "Н/" && (week+1)%2 == 0 {
+				if oddeven == "Н/" && tt.isDayOdd(DayOfWeekNum[dow]) {
 					continue
 				}
 			}
 			for _, cell := range cells {
 				txt := scrape.Text(cell)
-				if countOddEven && (txt == "Н/" || txt == "/Ч") {
+				if txt == "Н/" || txt == "/Ч" {
 					continue
 				}
 				tr = append(tr, scrape.Text(cell))
@@ -356,4 +350,28 @@ func (tt *MEPHI_TimeTable) PrDayTimeTable(pname string, dow string) (trs []Table
 		tr = nil
 	}
 	return
+}
+
+func (tt MEPHI_TimeTable) isDayOdd(dayInWeekNum int) bool { //день текущей недели
+	var delta, s_delta int
+	today := time.Now()
+	weekBegin := int(today.Day()) - int(today.Weekday()) + 1 //день начала недели
+	if weekBegin < 0 {                                       //если раньше 1го числа месяца
+		weekBegin *= -1
+	}
+	day := time.Date(today.Year(), today.Month(), weekBegin+dayInWeekNum, 0, 0, 0, 0, today.Location())
+	s1begin := time.Date(today.Year(), 9, 1, 0, 0, 0, 0, today.Location()) //начало 1 семестра
+	s2begin := time.Date(today.Year(), 2, 8, 0, 0, 0, 0, today.Location()) //начало 2 семестра
+	if day.After(s2begin) {
+		delta = int(day.YearDay()) - int(s2begin.YearDay())
+		_, d1 := day.ISOWeek()
+		_, d2 := s2begin.ISOWeek()
+		s_delta = d1 - d2 //сколько воскресений убирать
+	} else {
+		delta = day.YearDay() - s1begin.YearDay()
+		_, d1 := day.ISOWeek()
+		_, d2 := s1begin.ISOWeek()
+		s_delta = d1 - d2
+	}
+	return (delta-s_delta)%2 == 0
 }
