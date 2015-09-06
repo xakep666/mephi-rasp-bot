@@ -246,7 +246,6 @@ func (tt *MEPHI_TimeTable) GroupNearestPair(gname string) (trs []TableRow) {
 		mend, _ := strconv.Atoi(scrape.Text(cells[1])[11:13])
 		startTime := time.Date(now.Year(), now.Month(), now.Day(), hstart, mstart, 0, 0, now.Location())
 		endTime := time.Date(now.Year(), now.Month(), now.Day(), hend, mend, 0, 0, now.Location())
-		log.Println(startTime.String() + " " + endTime.String())
 		//если время "сейчас" между "концом" и "началом" - берем эту строку
 		if now.After(startTime) && now.Before(endTime) {
 			nrow = i
