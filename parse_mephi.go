@@ -361,7 +361,14 @@ func (tt MEPHI_TimeTable) isDayOdd(dayInWeekNum int) bool { //день теку�
 	}
 	day := time.Date(today.Year(), today.Month(), weekBegin+dayInWeekNum, 0, 0, 0, 0, today.Location())
 	s1begin := time.Date(today.Year(), 9, 1, 0, 0, 0, 0, today.Location()) //начало 1 семестра
+	//если попало на воскресенье, отсчитываем от 2 числа
+	if s1begin.Weekday() == 7 {
+		s1begin = time.Date(today.Year(), 9, 2, 0, 0, 0, 0, today.Location())
+	}
 	s2begin := time.Date(today.Year(), 2, 8, 0, 0, 0, 0, today.Location()) //начало 2 семестра
+	if s2begin.Weekday() == 7 {
+		s2begin = time.Date(today.Year(), 2, 9, 0, 0, 0, 0, today.Location())
+	}
 	if day.After(s2begin) {
 		delta = int(day.YearDay()) - int(s2begin.YearDay())
 		_, d1 := day.ISOWeek()
