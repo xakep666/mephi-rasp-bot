@@ -3,12 +3,11 @@ package main
 import (
 	"log"
 	"net/http"
-	"strconv"
-	"time"
-
 	"rasp-bot/Godeps/_workspace/src/github.com/yhat/scrape"
 	"rasp-bot/Godeps/_workspace/src/golang.org/x/net/html"
 	"rasp-bot/Godeps/_workspace/src/golang.org/x/net/html/atom"
+	"strconv"
+	"time"
 )
 
 /* Структура таблицы:
@@ -359,7 +358,7 @@ func (tt MEPHI_TimeTable) isDayOdd(dayInWeekNum int) bool { //день теку�
 	if weekBegin < 0 {                                       //если раньше 1го числа месяца
 		weekBegin *= -1
 	}
-	day := time.Date(today.Year(), today.Month(), weekBegin+dayInWeekNum, 0, 0, 0, 0, today.Location())
+	day := time.Date(today.Year(), today.Month(), weekBegin+dayInWeekNum-1, 0, 0, 0, 0, today.Location())
 	s1begin := time.Date(today.Year(), 9, 1, 0, 0, 0, 0, today.Location()) //начало 1 семестра
 	//если попало на воскресенье, отсчитываем от 2 числа
 	if s1begin.Weekday() == 7 {
