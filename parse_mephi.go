@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"math"
 	"net/http"
 	"rasp-bot/Godeps/_workspace/src/github.com/yhat/scrape"
 	"rasp-bot/Godeps/_workspace/src/golang.org/x/net/html"
@@ -379,6 +380,6 @@ func (tt MEPHI_TimeTable) isDayOdd(dayInWeekNum int) bool { //день теку�
 		_, d2 = s2begin.ISOWeek()
 	}
 	s_delta = d1 - d2 //сколько воскресений убирать
-	weekFromStartNum := (delta - s_delta) / 6
+	weekFromStartNum := int(math.Ceil(float64(delta-s_delta) / float64(6)))
 	return weekFromStartNum%2 == 0
 }
