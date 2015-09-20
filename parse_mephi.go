@@ -354,11 +354,11 @@ func (tt *MEPHI_TimeTable) PrDayTimeTable(pname string, dow string) (trs []Table
 func (tt MEPHI_TimeTable) isDayOdd(dayInWeekNum int) bool { //день текущей недели
 	var delta, s_delta int
 	today := time.Now()
-	weekBegin := int(today.Day()) - int(today.Weekday()) + 1 //день начала недели
-	if weekBegin < 0 {                                       //если раньше 1го числа месяца
+	weekBegin := int(today.Day()) - int(today.Weekday()) //день начала недели
+	if weekBegin < 0 {                                   //если раньше 1го числа месяца
 		weekBegin *= -1
 	}
-	day := time.Date(today.Year(), today.Month(), weekBegin+dayInWeekNum-1, 0, 0, 0, 0, today.Location())
+	day := time.Date(today.Year(), today.Month(), weekBegin+dayInWeekNum, 0, 0, 0, 0, today.Location())
 	s1begin := time.Date(today.Year(), 9, 1, 0, 0, 0, 0, today.Location()) //начало 1 семестра
 	//если попало на воскресенье, отсчитываем от 2 числа
 	if s1begin.Weekday() == 7 {
@@ -368,13 +368,13 @@ func (tt MEPHI_TimeTable) isDayOdd(dayInWeekNum int) bool { //день теку�
 	if s2begin.Weekday() == 7 {
 		s2begin = time.Date(today.Year(), 2, 9, 0, 0, 0, 0, today.Location())
 	}
-	if day.After(s2begin) {
-		delta = int(day.YearDay()) - int(s2begin.YearDay())
+	if day.After(s1begin) {
+		delta = int(day.YearDay()) - int(s1begin.YearDay())
 		_, d1 := day.ISOWeek()
 		_, d2 := s2begin.ISOWeek()
 		s_delta = d1 - d2 //сколько воскресений убирать
-	} else {
-		delta = day.YearDay() - s1begin.YearDay()
+	} else if day.After(s2begin) {
+		delta = int(day.YearDay()) - int(s2begin.YearDay())
 		_, d1 := day.ISOWeek()
 		_, d2 := s1begin.ISOWeek()
 		s_delta = d1 - d2
